@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:hiragana_converter/input_form.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -25,6 +27,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Hiragana Converter'),
+      ),
+      body: const InputForm(),
+    );
   }
 }
