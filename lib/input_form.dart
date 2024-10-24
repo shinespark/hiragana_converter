@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:hiragana_converter/data.dart';
 
 class InputForm extends StatefulWidget {
   const InputForm({super.key});
@@ -36,12 +40,35 @@ class _InputFormState extends State<InputForm> {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               final formState = _formKey.currentState!;
               if (!formState.validate()) {
                 return;
               }
-              debugPrint('text = ${_textEditingController.text}');
+
+              final appId = const String.fromEnvironment('appId');
+              debugPrint('appId: $appId');
+
+              final url = Uri.parse('https://labs.goo.ne.jp/api/hiragana');
+              final headers = {
+                'Content-Type': 'application/json',
+              };
+              final request = Request(
+                appId: const String.fromEnvironment('appId'),
+                sentence: _textEditingController.text,
+              );
+
+              final result = await http.post(
+                url,
+                headers: headers,
+                body: jsonEncode(request.toJson()),
+              );
+
+              final response = Response.fromJson(
+                jsonDecode(result.body) as Map<String, Object?>,
+              );
+
+              debugPrint('変換結果: ${response.converted}');
             },
             child: const Text(
               '変換',
